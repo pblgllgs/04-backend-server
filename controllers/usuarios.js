@@ -1,21 +1,49 @@
+const Usuario =  require('../models/usuario');
+const {response} = require('express')
 
 
+const getUsuarios = async (req, res) => {
 
-const getUSuarios = (req, res) => {
-    res.json({
+    const usuarios = await Usuario.find({},'nombre email role google');
+
+    return res.json({
         ok : true,
-        usuarios: []
+        usuarios
     })
 }
 
-const crearUsuario = (req, res) => {
-    res.json({
-        ok : true,
-        msg: 'creando usuario'
-    })
+const crearUsuario = async (req, res = response) => {
+
+    const {email, nombre, password} = req.body;
+
+    try {
+        const existeEmail = await Usuario.findOne({email});
+        if(existeEmail){
+            return res.status(400).json({
+                ok:false,
+                msg: 'El email ya esta registrado'
+            });
+        }
+        const usuario = new Usuario(req.body);
+        await usuario.save();
+
+        res.json({
+            ok : true,
+            usuario
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:' error inesperado'
+        })
+    }
+
+    
 }
 
 
 module.exports = {
-    getUSuarios,crearUsuario
+    getUsuarios,crearUsuario
 }

@@ -2,13 +2,13 @@
 
 const { Router } = require('express');
 
-const {getUSuarios, crearUsuario} = require('../controllers/usuarios')
+const {getUsuarios, crearUsuario} = require('../controllers/usuarios')
 
 const router = Router();
 
 
 //rutas
-router.get('/', getUSuarios );
+router.get('/', getUsuarios );
 
 router.post('/new', crearUsuario );
 
