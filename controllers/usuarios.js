@@ -2,12 +2,14 @@ const Usuario =  require('../models/usuario');
 const {validationResult} = require('express-validator')
 const {response} = require('express');
 const bcrypt =  require('bcryptjs');
+const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async (req, res) => {
     const usuarios = await Usuario.find({},'nombre email role google');
-    return res.json({
+    return res.status(202).json({
         ok : true,
-        usuarios
+        uid: req.uid,
+        usuarios,
     });
 }
 
@@ -26,10 +28,15 @@ const crearUsuario = async (req, res = response) => {
         //encriptar contraseña, salt numero generado de manera aleatoria,  de una sola via
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt);
+        //save
         await usuario.save();
+        //token
+        const token = await generarJWT(usuario.id, usuario.email);
+
         res.json({
             ok : true,
-            usuario
+            usuario,
+            token
         });
     } catch (error) {
         console.log(error);
@@ -88,9 +95,7 @@ const borrarUsuario = async (req, res = response) => {
                 msg: 'El usuario no existe'
             });
         }
-        
         await Usuario.findByIdAndDelete(uid);
-
         res.json({
             ok : true,
             msg: 'Usuario Eliminado'
@@ -102,7 +107,6 @@ const borrarUsuario = async (req, res = response) => {
             msg:' error inesperado'
         })
     }
-
 }
 
 const cambiaEstadoUsuario = async (req, res = response) => {
