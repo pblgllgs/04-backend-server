@@ -65,12 +65,12 @@ const actualizarUsuario = async (req, res = response) => {
             });
         }
 
-        const campos = req.body;
+        //quitamos el password y google, porque no queremos actualizar esos datos
+        const {password, google, email, ...campos} = req.body;
 
-        if(usuarioDB.email === req.body.email){
-            delete campos.email;
-        }else{
-            const existeEmail = await Usuario.findOne({email: req.body.email});
+        if(usuarioDB.email !== email){
+        
+            const existeEmail = await Usuario.findOne({email});
             if(existeEmail){
                 return res.status(400).json({
                     ok: false,
@@ -78,10 +78,7 @@ const actualizarUsuario = async (req, res = response) => {
                 })
             }
         }
-
-        
-        delete campos.password;
-        delete campos.google;
+        campos.email = email;
 
         const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {new:true});
 
