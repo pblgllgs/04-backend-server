@@ -6,7 +6,9 @@ const Medico = require('../models/medico');
 
 const getMedicos = async (req,res = response) =>{
 
-    const medicos = await Medico.find({},'nombre hospital usuario');
+    const medicos = await Medico.find()
+        .populate('usuario','nombre img')
+        .populate('hospital','nombre');
     return res.status(202).json({
         ok : true,
         uid: req.uid,
@@ -47,7 +49,6 @@ const actualizarMedico = (req,res = response) =>{
     })
 }
 
-
 const borrarMedico = (req,res = response) =>{
 
     res.json({
@@ -55,8 +56,6 @@ const borrarMedico = (req,res = response) =>{
         msg: 'borrar Medico'
     })
 }
-
-
 
 module.exports = {
     getMedicos,
