@@ -25,6 +25,41 @@ const getTodo = async (req,res = response) =>{
     });
 }
 
+const getDocumentosColeccion = async (req,res = response) =>{
+
+    const busqueda = req.params.busqueda;
+    const tabla = req.params.tabla;
+    const regex = new RegExp(busqueda,'i');
+    let data = [];
+
+    switch (tabla) {
+        case 'usuarios':
+            data = await Usuario.find({ nombre : regex });
+            break;
+        case 'medicos':
+            data = await Medico.find({ nombre : regex })
+                                .populate('usuario','nombre img')
+                                .populate('hospital','nombre img');
+            break;
+        case 'hospitales':
+            data = await Hospital.find({ nombre : regex })
+                                .populate('usuario','nombre img');
+            break;
+
+        default:
+            return res.status(400).json({
+                ok: false,
+                msg: 'no existe ese documento'
+            });
+    }
+
+    res.status(202).json({
+        ok : true,
+        resultados : data
+    });
+}
+
 module.exports = {
-    getTodo
+    getTodo,
+    getDocumentosColeccion
 }
