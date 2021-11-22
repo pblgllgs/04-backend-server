@@ -37,7 +37,7 @@ const crearUsuario = async (req, res = response) => {
             });
         }
         const usuario = new Usuario(req.body);
-        //encriptar contraseña, salt numero generado de manera aleatoria,  de una sola via
+        //salt numero generado de manera aleatoria,  de una sola via
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt);
         //save
