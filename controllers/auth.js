@@ -3,6 +3,7 @@ const {validationResult} = require('express-validator')
 const {response} = require('express');
 const bcrypt =  require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 
 const login = async (req, res = response) => {
@@ -67,7 +68,34 @@ const login = async (req, res = response) => {
     }
 }
 
+const googleSign = async (req, res= response) =>{
+    //tomamos el token del body
+    const googleToken = req.body.token;
+
+    try {
+
+        const {name, email, picture} = await googleVerify(googleToken);
+
+        res.json({
+            ok : true,
+            msg : 'Google sign in',
+            name,
+            email,
+            picture,
+            googleToken
+        });
+
+    } catch (error) {
+
+        res.status(401).json({
+            ok : false,
+            msg : 'Unauthorized'
+        });
+    }
+}
+
 
 module.exports = {
-    login
+    login,
+    googleSign
 }
