@@ -1,5 +1,4 @@
 const Usuario =  require('../models/usuario');
-const {validationResult} = require('express-validator')
 const {response} = require('express');
 const bcrypt =  require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
@@ -29,7 +28,7 @@ const login = async (req, res = response) => {
             });
         }
 
-        const token = await generarJWT(usuarioDB.id, usuarioDB.email);
+        const token = await generarJWT(usuarioDB.id);
 
         res.status(200).json({
             ok : true,
@@ -71,18 +70,35 @@ const login = async (req, res = response) => {
 const googleSign = async (req, res= response) =>{
     //tomamos el token del body
     const googleToken = req.body.token;
-
+    let usuario;
     try {
-
+        //desestructuracion de la respuesta
         const {name, email, picture} = await googleVerify(googleToken);
+        const usuarioDB = await Usuario.findOne({email});
 
+        //si no existe, asignamos los datos aun usuario para luego guardar sus datos en db
+        if(!usuarioDB){
+            usuario = new Usuario({
+                nombre: name,
+                email ,
+                password : '123',
+                img: picture,
+                google: true
+
+            });
+        }else{
+            //existe
+            usuario = usuarioDB;
+            usuario.google = true;
+        }
+        //save
+        await usuario.save();
+        //generamos jwt
+        const token = await generarJWT(usuario.id);
         res.json({
             ok : true,
             msg : 'Google sign in',
-            name,
-            email,
-            picture,
-            googleToken
+            token
         });
 
     } catch (error) {
