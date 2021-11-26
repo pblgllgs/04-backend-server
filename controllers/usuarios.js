@@ -26,7 +26,6 @@ const getUsuarios = async (req, res) => {
 
 const crearUsuario = async (req, res = response) => {
     const {email,password} = req.body;
-    const errores = validationResult(req);
     try {
         const existeEmail = await Usuario.findOne({email});
         if(existeEmail){
