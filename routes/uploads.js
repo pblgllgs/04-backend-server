@@ -12,7 +12,7 @@ router.use(expressFileUpload());
 
 //rutas
 router.put('/:tipo/:id',validarJWT,fileUploads);
-router.get('/:tipo/:foto',validarJWT,retornaImagen);
+router.get('/:tipo/:foto',retornaImagen);
 
 
 module.exports = router;

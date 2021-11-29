@@ -88,9 +88,9 @@ const renewToken = async (req, res = response) => {
   const uid = req.uid;
 
   //buscamos el usuario en la  db
-  const usuarioDB = await Usuario.findById( uid );
+  const usuario = await Usuario.findById( uid );
   //si no
-  if (!usuarioDB) {
+  if (!usuario) {
     return res.status(400).json({
       ok: false,
       msg: "Id de usuario no existe",
@@ -101,7 +101,7 @@ const renewToken = async (req, res = response) => {
   const token = await generarJWT(uid);
   res.json({
     ok: true,
-    usuarioDB,
+    usuario,
     token,
   });
 };
