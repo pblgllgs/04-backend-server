@@ -86,11 +86,22 @@ const googleSign = async (req, res = response) => {
 const renewToken = async (req, res = response) => {
   //tomamos el uid proveniente del token del login
   const uid = req.uid;
+
+  //buscamos el usuario en la  db
+  const usuarioDB = await Usuario.findById( uid );
+  //si no
+  if (!usuarioDB) {
+    return res.status(400).json({
+      ok: false,
+      msg: "Id de usuario no existe",
+    });
+  }
+
   //volvemos a generar el token
   const token = await generarJWT(uid);
   res.json({
     ok: true,
-    uid,
+    usuarioDB,
     token,
   });
 };
