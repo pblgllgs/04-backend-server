@@ -1,8 +1,4 @@
 {
-    "cSpell.words": [
-        "fileupload",
-        "uuidv"
-    ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#2f7c47",
         "activityBar.activeBorder": "#422c74",
@@ -22,8 +18,5 @@
         "titleBar.inactiveBackground": "#21573299",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#215732",
-    "window.zoomLevel": 1,
-    "editor.fontSize": 14,
-    "terminal.integrated.fontSize": 14,
+    "peacock.color": "#215732"
 }
