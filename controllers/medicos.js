@@ -107,9 +107,29 @@ const borrarMedico = async (req, res = response) => {
   }
 };
 
+const getMedicoById = async (req, res = response) => {
+  const id = req.params.id;
+  try {
+    const medico = await Medico.findById(id)
+      .populate("usuario", "nombre img")
+      .populate("hospital", "nombre img");
+    return res.status(202).json({
+      ok: true,
+      medico,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      server: "500 Internal Server Error",
+      msg: "Medico no encontrado",
+    });
+  }
+};
+
 module.exports = {
   getMedicos,
   crearMedico,
   actualizarMedico,
   borrarMedico,
+  getMedicoById,
 };
