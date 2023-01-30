@@ -3,8 +3,8 @@ version: '3.8'
 services:
 
   app:
-    container_name: backend
-    image: backend:latest
+    container_name: backend-server
+    image: pblgllgs/backend-server:1.0.0
     ports:
       - 3000:3000
     env_file:
